@@ -1,0 +1,675 @@
+import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
+/**
+ * Medusa WoW 3.3.5a — Landing & Community
+ *
+ * Fixes:
+ * - Added missing <Hero /> component.
+ * - Added missing <QuickStats /> component and included it in the layout.
+ * - Defined all components referenced in JSX to avoid ReferenceError.
+ * - Replaced unsupported Tailwind aspect-ratio utilities with a CSS ratio wrapper.
+ * - Added lightweight self-tests (<DevTests />) to ensure key components exist.
+ */
+
+export default function MedusaLanding() {
+  return (
+    <div
+      className="min-h-screen text-slate-100 bg-fixed bg-cover bg-center relative overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.95)), url(https://wow.zamimg.com/uploads/screenshots/normal/1063182.jpg)",
+      }}
+    >
+      {/* Partículas animadas */}
+      <Particles />
+
+      {/* Marco decorativo */}
+      <div className="absolute inset-0 border-8 border-yellow-600/70 rounded-xl pointer-events-none z-20 shadow-[0_0_40px_rgba(255,215,0,0.6)]" />
+
+      {/* Capa oscura */}
+      <div className="min-h-screen relative z-30">
+        <Navbar />
+
+        <AnimatedSection>
+          <Hero />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <QuickStats />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <NewsSlider />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Features />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <MediaSlider />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Showcase />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Ranking />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Community />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Downloads />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <AccountSection />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <ForumSection />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <GuidesSection />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Donations />
+        </AnimatedSection>
+
+        <AdsBar />
+        <Footer />
+        <FloatingCTA />
+        <DevTests />
+      </div>
+    </div>
+  );
+}
+
+/************************** Utils **************************/
+// Animaciones de aparición al hacer scroll
+function AnimatedSection({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: false, amount: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Partículas inspiradas en WoW (runas, fuegos fatuos)
+function Particles() {
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const arr = Array.from({ length: 25 }).map(() => ({
+      id: Math.random(),
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 40 + 20,
+      delay: Math.random() * 5,
+    }));
+    setParticles(arr);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-10 overflow-hidden">
+      {particles.map((p) => (
+        <motion.img
+          key={p.id}
+          src="https://wow.zamimg.com/uploads/screenshots/normal/1035202.jpg"
+          alt="runa"
+          className="absolute opacity-30 saturate-200 hue-rotate-30"
+          style={{ top: `${p.y}%`, left: `${p.x}%`, width: p.size, height: p.size }}
+          animate={{ y: [p.y + "%", p.y - 20 + "%"], opacity: [0.2, 0.7, 0.2], rotate: [0, 360] }}
+          transition={{ duration: 12, repeat: Infinity, delay: p.delay, ease: "linear" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/************************** UI Blocks **************************/
+function Navbar() {
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur bg-gradient-to-r from-amber-900/80 via-slate-900/90 to-emerald-900/80 border-b-4 border-yellow-500 shadow-yellow-600/50 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <motion.img
+            src="https://wow.zamimg.com/uploads/screenshots/normal/1057498.jpg"
+            alt="logo"
+            className="h-12 w-12 rounded-full border-2 border-yellow-400 shadow-[0_0_20px_rgba(255,215,0,0.7)]"
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            transition={{ type: "spring", stiffness: 200 }}
+          />
+          <div>
+            <p className="text-xs uppercase tracking-widest text-yellow-400 font-bold drop-shadow">Servidor WoW 3.3.5a</p>
+            <h1 className="font-extrabold text-2xl leading-tight bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(0,255,200,0.7)]">Medusa</h1>
+          </div>
+        </div>
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+          {[
+            "Descargas",
+            "Registro",
+            "Foro",
+            "Noticias",
+            "Guías",
+            "Media",
+            "Ranking",
+            "Comunidad",
+            "Donaciones",
+          ].map((item) => (
+            <motion.a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="hover:text-yellow-400 font-semibold text-slate-100"
+              whileHover={{ scale: 1.2, color: "#facc15" }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {item}
+            </motion.a>
+          ))}
+        </nav>
+        <motion.a
+          href="#cuenta"
+          className="px-5 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400 hover:from-cyan-400 hover:to-yellow-400 text-slate-900 font-extrabold transition shadow-lg shadow-yellow-500/50"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Crear cuenta
+        </motion.a>
+      </div>
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative overflow-hidden border-b-4 border-yellow-500/50" id="hero">
+      <motion.div
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2 }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url(https://wow.zamimg.com/uploads/screenshots/normal/1084705.jpg)" }}
+      />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-24 text-center bg-slate-950/70">
+        <h2 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-yellow-400 via-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,255,200,0.6)]">
+          Bienvenido a Medusa WoW
+        </h2>
+        <p className="mt-6 text-lg md:text-xl text-slate-200 drop-shadow-md max-w-2xl mx-auto">
+          Explora Azeroth con eventos únicos, comunidad activa y un mundo lleno de aventuras.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="#descargas" className="px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400 hover:from-cyan-400 hover:to-yellow-400 text-slate-950 font-bold transition shadow-xl">Jugar ahora</a>
+          <a href="#noticias" className="px-6 py-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border-2 border-yellow-400 font-semibold transition shadow-lg">Últimas noticias</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function QuickStats() {
+  const stats = [
+    { label: "Jugadores Online", value: 384 },
+    { label: "Guilds activas", value: 42 },
+    { label: "Ping promedio", value: 68, suffix: "ms" },
+    { label: "Eventos hoy", value: 3 },
+  ];
+  return (
+    <section className="py-8 bg-gradient-to-r from-emerald-900/60 via-amber-900/50 to-cyan-900/60 border-y border-yellow-500/30" id="quickstats">
+      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+        {stats.map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: i * 0.05 }}
+            className="rounded-2xl bg-slate-900/80 border-2 border-yellow-500/40 p-4 text-center shadow-lg"
+          >
+            <p className="text-3xl font-extrabold text-yellow-300">
+              {s.value}
+              {s.suffix || ""}
+            </p>
+            <p className="text-sm text-slate-300">{s.label}</p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Slider de Noticias estilo portal oficial
+function NewsSlider() {
+  const news = [
+    {
+      title: "Evento de XP Doble este fin de semana",
+      img: "https://wow.zamimg.com/uploads/screenshots/normal/957510.jpg",
+      desc: "Gana el doble de experiencia y sube de nivel más rápido en todas las zonas.",
+    },
+    {
+      title: "Nueva Raid disponible: ICC",
+      img: "https://wow.zamimg.com/uploads/screenshots/normal/1035203.jpg",
+      desc: "¡Prepárate para enfrentarte al Rey Exánime y conquista Ciudadela de la Corona de Hielo!",
+    },
+    {
+      title: "Actualización del Servidor",
+      img: "https://wow.zamimg.com/uploads/screenshots/normal/1063183.jpg",
+      desc: "Se han corregido errores en misiones y se agregaron nuevos logros para la comunidad.",
+    },
+  ];
+
+  return (
+    <section id="noticias" className="py-16 px-4 max-w-6xl mx-auto">
+      <h2 className="text-4xl font-extrabold text-center mb-8 text-yellow-300 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)]">
+        Noticias y Actualizaciones
+      </h2>
+      <Carousel autoPlay infiniteLoop interval={7000} showThumbs={false} showStatus={false} swipeable>
+        {news.map((n, idx) => (
+          <div key={idx} className="relative">
+            <img src={n.img} alt={n.title} className="rounded-lg shadow-2xl border-4 border-emerald-500/70" />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6 rounded-b-lg">
+              <h3 className="text-2xl font-bold text-yellow-300 drop-shadow mb-2">{n.title}</h3>
+              <p className="text-slate-200 text-sm">{n.desc}</p>
+            </div>
+          </div>
+        ))}
+      </Carousel>
+    </section>
+  );
+}
+
+// Características
+function Features() {
+  const data = [
+    { title: "XP Equilibrada", desc: "Progreso justo y divertido.", img: "https://wow.zamimg.com/uploads/screenshots/normal/973036.jpg" },
+    { title: "Eventos semanales", desc: "Compite y gana recompensas exclusivas.", img: "https://wow.zamimg.com/uploads/screenshots/normal/1087151.jpg" },
+    { title: "Soporte 24/7", desc: "Admins activos para ayudarte siempre.", img: "https://wow.zamimg.com/uploads/screenshots/normal/1082216.jpg" },
+  ];
+  return (
+    <section className="py-20 bg-slate-900/80 backdrop-blur-lg" id="caracteristicas">
+      <h3 className="text-center text-3xl font-bold text-yellow-300 mb-12 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)] uppercase tracking-wider">Características</h3>
+      <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8 text-center">
+        {data.map((f, i) => (
+          <motion.div key={i} whileHover={{ scale: 1.05 }} className="rounded-3xl bg-slate-800/80 border-4 border-yellow-600/40 shadow-lg overflow-hidden hover:shadow-yellow-400/40">
+            <img src={f.img} alt={f.title} className="h-40 w-full object-cover border-b-4 border-yellow-600/40" />
+            <div className="p-6">
+              <h3 className="text-xl font-semibold text-yellow-300 drop-shadow-md">{f.title}</h3>
+              <p className="text-slate-300 mt-2">{f.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Media
+function MediaSlider() {
+  const slides = [
+    { type: "image", src: "https://wow.zamimg.com/uploads/screenshots/normal/1035201.jpg", caption: "Reinos de Azeroth" },
+    { type: "image", src: "https://wow.zamimg.com/uploads/screenshots/normal/1008062.jpg", caption: "Batallas Épicas" },
+    { type: "image", src: "https://wow.zamimg.com/uploads/screenshots/normal/1063182.jpg", caption: "Mazmorras y Raids" },
+    { type: "video", src: "https://www.youtube.com/embed/dVzQ5zG1n5o", caption: "Trailer WoW Medusa" },
+  ];
+  return (
+    <section id="media" className="py-16 px-4 max-w-6xl mx-auto">
+      <h2 className="text-4xl font-extrabold text-center mb-8 bg-gradient-to-r from-yellow-400 via-emerald-300 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(0,255,200,0.7)]">Galería Épica</h2>
+      <Carousel autoPlay infiniteLoop interval={6000} showThumbs={false} showStatus={false} swipeable>
+        {slides.map((slide, idx) => (
+          <div key={idx} className="relative">
+            {slide.type === "image" ? (
+              <img src={slide.src} alt={slide.caption} className="rounded-lg shadow-xl border-4 border-yellow-500/80" />
+            ) : (
+              <div className="w-full" style={{ position: "relative", paddingTop: "56.25%" }}>
+                <iframe
+                  src={slide.src}
+                  title={slide.caption}
+                  className="absolute top-0 left-0 w-full h-full rounded-lg border-4 border-yellow-500/80 shadow-xl"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            )}
+            <p className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-950/80 text-yellow-300 px-4 py-1 rounded-full text-lg font-semibold shadow-lg">{slide.caption}</p>
+          </div>
+        ))}
+      </Carousel>
+    </section>
+  );
+}
+
+// Showcase de imágenes
+function Showcase() {
+  const images = [
+    "https://wow.zamimg.com/uploads/screenshots/normal/1002629-icecrown-citadel.jpg",
+    "https://wow.zamimg.com/uploads/screenshots/normal/1040652.jpg",
+    "https://wow.zamimg.com/uploads/screenshots/normal/1104533.jpg",
+  ];
+  return (
+    <section id="showcase" className="py-20 bg-slate-950/80">
+      <h3 className="text-center text-3xl font-bold text-yellow-300 mb-12 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)] uppercase tracking-wider">Galería de Azeroth</h3>
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 px-4">
+        {images.map((src, i) => (
+          <motion.div key={i} whileHover={{ scale: 1.05 }} className="overflow-hidden rounded-2xl border-4 border-yellow-600/40 shadow-lg hover:shadow-yellow-400/40">
+            <img src={src} alt="WoW" className="w-full h-64 object-cover hover:scale-110 transition-transform duration-500" />
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Ranking
+function Ranking() {
+  const ranks = [
+    { player: "Arthasdk", score: 2540, img: "https://wow.zamimg.com/uploads/screenshots/normal/1062722.jpg" },
+    { player: "Illidari", score: 2100, img: "https://wow.zamimg.com/uploads/screenshots/normal/1094059.jpg" },
+    { player: "Sylvanas", score: 1987, img: "https://wow.zamimg.com/uploads/screenshots/normal/1088296.jpg" },
+  ];
+  return (
+    <section id="ranking" className="py-20 bg-slate-900/85 backdrop-blur-lg">
+      <h3 className="text-center text-3xl font-bold text-yellow-300 mb-12 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)] uppercase tracking-wider">Ranking PvP</h3>
+      <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 px-4">
+        {ranks.map((r, i) => (
+          <motion.div key={i} whileHover={{ scale: 1.05 }} className="rounded-2xl bg-slate-800/80 border-4 border-yellow-600/40 shadow-lg p-6 text-center">
+            <img src={r.img} alt={r.player} className="w-24 h-24 mx-auto rounded-full border-4 border-yellow-500 mb-4 object-cover" />
+            <h4 className="text-xl font-bold text-yellow-300">{r.player}</h4>
+            <p className="text-slate-300">Puntuación: {r.score}</p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Comunidad (posts, likes, comentarios)
+function Community() {
+  const [posts, setPosts] = useState([
+    { user: "Thrall", img: "https://wow.zamimg.com/uploads/screenshots/normal/1048202.jpg", text: "¡He derrotado a Arthas en ICC!", likes: 3, comments: [] },
+    { user: "Jaina", img: "https://wow.zamimg.com/uploads/screenshots/normal/1085085.jpg", text: "Nueva guía de mago frost disponible.", likes: 1, comments: [] },
+  ]);
+  const [newPost, setNewPost] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!newPost.trim()) return;
+    setPosts([{ user: "Jugador", img: "https://wow.zamimg.com/uploads/screenshots/normal/1092670.jpg", text: newPost, likes: 0, comments: [] }, ...posts]);
+    setNewPost("");
+  };
+
+  const handleLike = (index) => {
+    const updated = [...posts];
+    updated[index].likes += 1;
+    setPosts(updated);
+  };
+
+  const handleComment = (index, comment) => {
+    const updated = [...posts];
+    updated[index].comments.push(comment);
+    setPosts(updated);
+  };
+
+  return (
+    <section id="comunidad" className="py-20 bg-slate-950/80 border-t-4 border-yellow-600/40">
+      <div className="max-w-4xl mx-auto px-4 text-center border-4 border-yellow-600/40 rounded-3xl shadow-lg p-10 bg-slate-900/70">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-6 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)]">Comunidad Medusa</h3>
+        <p className="text-slate-300 mb-6">Comparte tus logros, imágenes y conecta con otros jugadores.</p>
+        <form onSubmit={handleSubmit} className="mb-6 flex flex-col md:flex-row gap-4 justify-center">
+          <input
+            type="text"
+            value={newPost}
+            onChange={(e) => setNewPost(e.target.value)}
+            placeholder="Escribe tu logro o mensaje..."
+            className="flex-1 px-4 py-2 rounded-lg border-2 border-yellow-500 bg-slate-800 text-slate-100"
+          />
+          <button type="submit" className="px-6 py-2 rounded-lg bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400 hover:from-cyan-400 hover:to-yellow-400 text-slate-950 font-semibold shadow-md">
+            Publicar
+          </button>
+        </form>
+        <div className="space-y-6 max-h-96 overflow-y-auto text-left">
+          {posts.map((post, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-slate-800/80 border-2 border-yellow-600/40 shadow-md">
+              <div className="flex gap-4 items-start">
+                <img src={post.img} alt={post.user} className="w-16 h-16 object-cover rounded-lg border-2 border-yellow-400" />
+                <div className="flex-1">
+                  <p className="text-yellow-300 font-semibold">{post.user}</p>
+                  <p className="text-slate-200 mb-2">{post.text}</p>
+                  <div className="flex gap-4 items-center mb-3">
+                    <button onClick={() => handleLike(i)} className="text-yellow-300 hover:text-yellow-200 font-semibold">❤️ {post.likes}</button>
+                  </div>
+                  <div className="space-y-2">
+                    {post.comments.map((c, j) => (
+                      <div key={j} className="text-slate-300 text-sm border-l-2 border-yellow-500 pl-2">💬 {c}</div>
+                    ))}
+                  </div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const comment = e.target.comment.value;
+                      if (comment.trim()) {
+                        handleComment(i, comment);
+                        e.target.comment.value = "";
+                      }
+                    }}
+                    className="mt-2 flex gap-2"
+                  >
+                    <input type="text" name="comment" placeholder="Escribe un comentario..." className="flex-1 px-3 py-1 rounded-lg border border-yellow-500 bg-slate-900 text-slate-100 text-sm" />
+                    <button type="submit" className="px-3 py-1 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-sm font-semibold">Comentar</button>
+                  </form>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Descargas
+function Downloads() {
+  const items = [
+    { name: "Cliente 3.3.5a (Windows)", href: "#", desc: "Versión recomendada" },
+    { name: "Cliente 3.3.5a (macOS)", href: "#", desc: "Intel" },
+    { name: "AddOns esenciales", href: "#", desc: "DBM, Recount, Auctioneer" },
+    { name: "Parche Español (esES)", href: "#", desc: "Opcional" },
+  ];
+  return (
+    <section id="descargas" className="py-16 bg-slate-900/70">
+      <div className="max-w-5xl mx-auto px-4">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-6">Descargas</h3>
+        <ul className="grid md:grid-cols-2 gap-4">
+          {items.map((it) => (
+            <li key={it.name} className="p-4 rounded-xl border-2 border-yellow-600/40 bg-slate-800/70 flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-slate-100">{it.name}</p>
+                <p className="text-sm text-slate-300">{it.desc}</p>
+              </div>
+              <a href={it.href} className="px-3 py-1 rounded-lg bg-yellow-400 text-slate-900 font-semibold hover:bg-yellow-300">Descargar</a>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 p-4 rounded-xl bg-slate-800/70 border-2 border-yellow-600/40">
+          <p className="font-semibold text-yellow-300">Realmlist</p>
+          <code className="text-slate-200">set realmlist logon.medusawow.com</code>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Registro/Cuenta
+function AccountSection() {
+  return (
+    <section id="registro" className="py-16 bg-slate-900/80">
+      <div className="max-w-4xl mx-auto px-4">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-4">Crear cuenta</h3>
+        <form className="grid md:grid-cols-2 gap-4 p-6 rounded-xl border-2 border-yellow-600/40 bg-slate-800/70">
+          <input className="px-3 py-2 rounded-lg bg-slate-900 border border-yellow-500 text-slate-100" placeholder="Usuario" />
+          <input className="px-3 py-2 rounded-lg bg-slate-900 border border-yellow-500 text-slate-100" placeholder="Email" type="email" />
+          <input className="px-3 py-2 rounded-lg bg-slate-900 border border-yellow-500 text-slate-100" placeholder="Contraseña" type="password" />
+          <input className="px-3 py-2 rounded-lg bg-slate-900 border border-yellow-500 text-slate-100" placeholder="Repetir contraseña" type="password" />
+          <button className="md:col-span-2 px-4 py-2 rounded-lg bg-yellow-400 text-slate-900 font-bold hover:bg-yellow-300">Registrar</button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+// Foro
+function ForumSection() {
+  const threads = [
+    { title: "Guía para principiantes", replies: 12 },
+    { title: "Reclutamiento de Guilds", replies: 8 },
+    { title: "Reporte de bugs", replies: 5 },
+  ];
+  return (
+    <section id="foro" className="py-16 bg-slate-950/70">
+      <div className="max-w-5xl mx-auto px-4">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-4">Foro</h3>
+        <div className="rounded-xl border-2 border-yellow-600/40 overflow-hidden">
+          {threads.map((t, i) => (
+            <div key={t.title} className={`flex items-center justify-between p-4 ${i % 2 ? "bg-slate-800/70" : "bg-slate-900/70"}`}>
+              <p className="text-slate-100">{t.title}</p>
+              <span className="text-sm text-slate-300">{t.replies} respuestas</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Guías
+function GuidesSection() {
+  const guides = [
+    { title: "Addons esenciales 3.3.5a", link: "#" },
+    { title: "Ruta de leveo 1-80", link: "#" },
+    { title: "Guía de profesiones", link: "#" },
+  ];
+  return (
+    <section id="guías" className="py-16 bg-slate-900/70">
+      <div className="max-w-5xl mx-auto px-4">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-4">Guías</h3>
+        <ul className="grid md:grid-cols-2 gap-4">
+          {guides.map((g) => (
+            <li key={g.title} className="p-4 rounded-xl border-2 border-yellow-600/40 bg-slate-800/70 flex items-center justify-between">
+              <p className="text-slate-100">{g.title}</p>
+              <a className="px-3 py-1 rounded-lg bg-emerald-400 text-slate-900 font-semibold hover:bg-emerald-300" href={g.link}>Abrir</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+// Donaciones
+function Donations() {
+  return (
+    <section id="donaciones" className="py-20 bg-slate-900/90 backdrop-blur border-t-4 border-yellow-600/40">
+      <div className="max-w-4xl mx-auto px-4 text-center border-4 border-yellow-600/40 rounded-3xl shadow-lg p-10">
+        <h3 className="text-3xl font-bold text-yellow-300 mb-6 drop-shadow-[0_0_10px_rgba(255,215,0,0.7)] uppercase tracking-wider">Apoya el servidor</h3>
+        <p className="text-slate-300 mb-6">Tu donación nos ayuda a mantener el servidor en línea y ofrecer más contenido a la comunidad.</p>
+        <a href="#" className="px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400 hover:from-cyan-400 hover:to-yellow-400 text-slate-950 font-semibold transition shadow-xl">Donar ahora</a>
+      </div>
+    </section>
+  );
+}
+
+function AdsBar() {
+  return (
+    <aside className="sticky bottom-2 mx-auto left-0 right-0 max-w-5xl z-40 px-4">
+      <div className="rounded-xl border border-yellow-500/30 bg-slate-900/80 backdrop-blur p-3 text-center text-slate-300 text-sm">
+        Publicidad discreta — Tu banner aquí (728×90). Mantiene el servidor vivo sin ser invasivo.
+      </div>
+    </aside>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-slate-950 py-10 text-center text-slate-400 text-sm border-t-4 border-yellow-600/40">
+      <p>© {new Date().getFullYear()} Medusa WoW — Comunidad de jugadores.</p>
+      <p className="mt-1">No afiliado con Blizzard Entertainment.</p>
+    </footer>
+  );
+}
+
+function FloatingCTA() {
+  return (
+    <motion.a
+      href="#descargas"
+      className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400 text-slate-900 font-extrabold shadow-xl hover:from-cyan-400 hover:to-yellow-400"
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 14 }}
+    >
+      ▶ Jugar ahora
+    </motion.a>
+  );
+}
+
+/************************** Dev Self Tests **************************/
+function DevTests() {
+  const tests = useMemo(() => {
+    const cases = [];
+    // Test 1: Components defined
+    cases.push({ name: "Hero definido", pass: typeof Hero === "function" });
+    cases.push({ name: "QuickStats definido", pass: typeof QuickStats === "function" });
+    cases.push({ name: "NewsSlider definido", pass: typeof NewsSlider === "function" });
+    cases.push({ name: "MediaSlider definido", pass: typeof MediaSlider === "function" });
+    cases.push({ name: "Features definido", pass: typeof Features === "function" });
+    cases.push({ name: "Showcase definido", pass: typeof Showcase === "function" });
+    cases.push({ name: "Ranking definido", pass: typeof Ranking === "function" });
+    cases.push({ name: "Community definido", pass: typeof Community === "function" });
+    cases.push({ name: "Downloads definido", pass: typeof Downloads === "function" });
+    cases.push({ name: "AccountSection definido", pass: typeof AccountSection === "function" });
+    cases.push({ name: "ForumSection definido", pass: typeof ForumSection === "function" });
+    cases.push({ name: "GuidesSection definido", pass: typeof GuidesSection === "function" });
+    cases.push({ name: "Donations definido", pass: typeof Donations === "function" });
+    cases.push({ name: "Navbar definido", pass: typeof Navbar === "function" });
+    // Test 2: Basic render sanity — create elements
+    try {
+      const el = Hero();
+      cases.push({ name: "Hero retorna elemento", pass: !!el });
+    } catch (e) {
+      cases.push({ name: "Hero retorna elemento", pass: false, error: e?.message });
+    }
+    return cases;
+  }, []);
+
+  useEffect(() => {
+    // Log test results to console for debugging
+    console.group("Medusa UI Self Tests");
+    tests.forEach((t) => console.log(`${t.pass ? "✅" : "❌"} ${t.name}`, t.error ? `→ ${t.error}` : ""));
+    console.groupEnd();
+  }, [tests]);
+
+  return (
+    <details className="max-w-5xl mx-auto my-8 opacity-60 hover:opacity-100 transition">
+      <summary className="cursor-pointer text-xs text-slate-400">Ver resultados de tests (dev)</summary>
+      <ul className="text-xs text-slate-300 grid md:grid-cols-2 gap-1 mt-2">
+        {tests.map((t) => (
+          <li key={t.name} className={t.pass ? "text-emerald-300" : "text-red-300"}>
+            {t.pass ? "✅" : "❌"} {t.name}
+            {t.error ? <span className="ml-2 text-red-400">{String(t.error)}</span> : null}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
